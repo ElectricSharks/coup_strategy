@@ -4,6 +4,8 @@ Action Class
         print_action():
             Print the name of the action user, the action they are attempting to
             perform and, if applicable, the target of the action.
+        is_legal(gamestate, action, user): bool
+            pass
 """
 
 

@@ -11,6 +11,8 @@ Action Stack Class
             push an action to the stack
         - pop:
             pop an action from the stack
+        - is_empty:
+            check if the stack is empty
         - resolve:
             pop actions from the stack one at a time, if the action's
             action_succeeds field is set to true, resolve the action.
