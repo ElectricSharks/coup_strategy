@@ -1,7 +1,18 @@
 """
-Tax
+Action Class
+    Methods:
+        print_action():
+            Print the name of the action user, the action they are attempting to
+            perform and, if applicable, the target of the action.
+"""
+
+
+
+"""
+Tax - Action
     
     Fields:
+        action_user: Player
         action_name: Tax
         action_description: Take 3 coins from the treasury.
         action_cost: 0
@@ -19,8 +30,9 @@ Tax
 """
 
 """
-Assassinate
+Assassinate - Action
     Fields:
+        action_user: Player
         action_name: Assassinate
         action_description: Pay 3 coins to the Treasury and launch an
                             assassination attempt against another player. If
@@ -41,8 +53,9 @@ Assassinate
 
 
 """
-Steal
+Steal - Action
     Fields:
+        action_user: Player
         action_name: Steal
         action_description: Take 2 coins from another player, if they have one
                             coin, take 1 coin from them.
@@ -61,8 +74,9 @@ Steal
 """
 
 """
-Exchange
+Exchange - Action
     Fields:
+        action_user: Player
         action_name: Exchange
         action_description: Exchange cards with the Court deck. First take two
                             random cards from the Court deck. Choose which, if
@@ -85,8 +99,9 @@ Exchange
 """
 
 """
-Block Assassination
+Block Assassination - Action
     Fields:
+        action_user: Player
         action_name: Block Assassination
         action_description: The player who is being assassinated may claim the
                             Contessa and counteract to block the assassination.
@@ -106,8 +121,9 @@ Block Assassination
 """
 
 """
-Block Foreign Aid
+Block Foreign Aid - Action
     Fields:
+        action_user: Player
         action_name: Block Foreign Aid
         action_description: Any player claiming the Duke may counteract and
                             block a player attempting to collect foreign aid.
@@ -126,8 +142,9 @@ Block Foreign Aid
 """
 
 """
-Block Stealing
+Block Stealing - Action
     Fields:
+        action_user: Player
         action_name: Block Stealing
         action_description: The player who is being stolen from may claim either
                             the Ambassador or the Captain and counteract to
@@ -148,8 +165,9 @@ Block Stealing
 """
 
 """
-Income
+Income - Action
     Fields:
+        action_user: Player
         action_name: Income
         action_description: Take 1 coin from the treasury.
         action_cost: 0
@@ -166,8 +184,9 @@ Income
 """
 
 """
-Foreign Aid
+Foreign Aid - Action
     Fields:
+        action_user: Player
         action_name: Foreign Aid
         action_description: Take 2 coins from the treasury (can be blocked by
                             the Duke).
@@ -185,8 +204,9 @@ Foreign Aid
 """
 
 """
-Coup
+Coup - Action
     Fields:
+        action_user: Player
         action_name: Coup
         action_description: Pay 7 coins to the Treasury and launch a Coup
                             against another player. That player immediately
@@ -207,8 +227,9 @@ Coup
 """
 
 """
-Challenge
+Challenge - Action
     Fields:
+        action_user: Player
         action_name: Challenge
         action_description: If a player is challenged they must prove they had
                             the required influence by showing the relevant

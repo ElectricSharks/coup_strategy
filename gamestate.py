@@ -14,4 +14,12 @@ GameState Class
         setup_players():
         get_active_player():
         resolve_action_stack():
+        print_game_state():
+            Iterate through the players, invoking print_state. Print the active
+            player's state in red with the hidden tag set to true. Then print
+            the action stack's state.
+        next_turn():
+        get_legal_actions():
+            Iterate through all of the actions, checking whether they are legal
+            for the active player.
 """
