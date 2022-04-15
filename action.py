@@ -1,14 +1,14 @@
 """
 Action Class
+    Fields:
+        action_user: Player
+        action_name: None
+
     Methods:
         print_action():
             Print the name of the action user, the action they are attempting to
             perform and, if applicable, the target of the action.
-        is_legal(gamestate, action, user): bool
-            pass
 """
-
-
 
 """
 Tax - Action
@@ -29,6 +29,9 @@ Tax - Action
     Methods:
         resolve(gamestate):
             Active player gains 3 coins.
+        is_legal(gamestate, user): bool
+            Check that the user is the active player, checks that the user is
+            alive and checks that the user currently has less than 10 coins.
 """
 
 """
@@ -51,6 +54,11 @@ Assassinate - Action
     Methods:
         resolve(gamestate):
             Target player must choose an influnce to lose.
+        is_legal(gamestate, user): bool
+            Checks that the user is the active player, checks that the user is
+            alive, checks that the target of the user is not the user and is
+            alive and checks that the user has less than 10 coins, checks that
+            the user has 3 or more coins.
 """
 
 
@@ -73,6 +81,10 @@ Steal - Action
         resolve(gamestate):
             Target player loses up to 2 coins, without going below 0.
             Active player gains those lost coins.
+        is_legal(gamestate, user): bool
+            Checks that the user is the active player, checks that the user is
+            alive, checks that the target of the user is not the user and is
+            alive and checks that the user has less than 10 coins.
 """
 
 """
@@ -97,7 +109,9 @@ Exchange - Action
             Two cards are drawn from the deck, the active player then must
             resolve which card/card(s) they want to keep (get_player_exchange).
             The remaining cards are returned to the deck.
-
+        is_legal(gamestate, user): bool
+            Checks that the user is the active player, checks that the user is
+            alive, checks that the user has less than 10 coins.
 """
 
 """
@@ -120,6 +134,10 @@ Block Assassination - Action
     Methods:
         resolve(gamestate):
             Target player must choose an influence to lose.
+        is_legal(gamestate, user): bool
+            Checks that the user is not the active player, checks that the last
+            action in the action stack is an assasination action with the user
+            as the target, checks that the user is alive.
 """
 
 """
@@ -141,6 +159,10 @@ Block Foreign Aid - Action
         resolve(gamestate):
             If the top action in the action stack is a foreign aid action, its
             action_succeeds field is set to False.
+        is_legal(gamestate, user): bool
+            Checks that the user is not the active player, checks that the last
+            action in the action stack is a foreign aid action, checks that the
+            user is alive.
 """
 
 """
@@ -164,6 +186,10 @@ Block Stealing - Action
         resolve(gamestate):
             If the top action in the action stack is a steal action, its 
             action_succeeds field is set to False.
+        is_legal(gamestate, user): bool
+            Checks that the user is not the active player, checks that the last
+            action in the action stack is a steal action, checks that the user
+            is alive.
 """
 
 """
@@ -183,6 +209,9 @@ Income - Action
     Methods:
         resolve(gamestate):
             Active player gains 1 coin.
+        is_legal(gamestate, user): bool
+            Checks that the user is the active player, checks that the user is
+            alive and checks that the user currently has less than 10 coins.
 """
 
 """
@@ -203,6 +232,9 @@ Foreign Aid - Action
     Methods:
         resolve(gamestate):
             Active player gains 2 coins.
+        is_legal(gamestate, user): bool
+            Checks that the user is the active player, checks that the user is
+            alive and checks that the user currently has less than 10 coins.
 """
 
 """
@@ -226,6 +258,9 @@ Coup - Action
     Methods:
         resolve(gamestate):
             Target player must choose an influence to lose.
+        is_legal(gamestate, user): bool
+            Checks that the user is the active player, checks that the user is
+            alive and checks that the user currently has 7 or more coins.
 """
 
 """
@@ -261,4 +296,8 @@ Challenge - Action
             If the challenged player does not satisfy the action requirement,
             they must lose an influence and the action_succeeds field of the
             top action in the action stack is set to False.
+        is_legal(gamestate, user): bool
+            Checks that the user is not the active player, checks that the user
+            is alive and checks that the last action in the action stack is
+            challengeable.
 """
