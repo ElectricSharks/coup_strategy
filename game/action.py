@@ -1,3 +1,4 @@
+from game.influence import Duke, Assassin, Contessa, Captain, Ambassador
 """
 Action Class
     Fields:
@@ -12,9 +13,8 @@ Action Class
 
 """
 Tax - Action
-    
-    Fields:
-        action_user: Player
+
+    Attributes:
         action_name: Tax
         action_description: Take 3 coins from the treasury.
         action_cost: 0
@@ -23,21 +23,26 @@ Tax - Action
         blockable: False
         challengeable: True
         has_target: False
+
+    Fields:
+        action_user: Player
         action_succeeds: True
 
     
     Methods:
         resolve(gamestate):
             Active player gains 3 coins.
+
+        @staticmethod
         is_legal(gamestate, user): bool
             Check that the user is the active player, checks that the user is
             alive and checks that the user currently has less than 10 coins.
 """
 
+
 """
 Assassinate - Action
-    Fields:
-        action_user: Player
+    Attributes:
         action_name: Assassinate
         action_description: Pay 3 coins to the Treasury and launch an
                             assassination attempt against another player. If
@@ -49,12 +54,17 @@ Assassinate - Action
         blockable: True
         challengeable: True
         has_target: True
+
+    Fields:
+        action_user: Player
         action_succeeds: True
 
     Methods:
         resolve(gamestate):
             Target player must choose an influnce to lose.
-        is_legal(gamestate, user): bool
+
+        @staticmethod
+        is_legal(gamestate, user, target): bool
             Checks that the user is the active player, checks that the user is
             alive, checks that the target of the user is not the user and is
             alive and checks that the user has less than 10 coins, checks that
@@ -64,8 +74,7 @@ Assassinate - Action
 
 """
 Steal - Action
-    Fields:
-        action_user: Player
+    Attributes:
         action_name: Steal
         action_description: Take 2 coins from another player, if they have one
                             coin, take 1 coin from them.
@@ -75,22 +84,28 @@ Steal - Action
         blockable: True
         challengeable: True
         has_target: True
+
+    Fields:
+        action_user: Player
         action_succeeds: True
 
     Methods:
         resolve(gamestate):
-            Target player loses up to 2 coins, without going below 0.
-            Active player gains those lost coins.
-        is_legal(gamestate, user): bool
+            Target player loses 2 coins if they have 2 or more coins, loses 1
+            coin if they have 1 coin. Active player gains the lost coins. If the
+            target has no coins, the steal action cannot be used on them.
+
+        @staticmethod
+        is_legal(gamestate, user, target): bool
             Checks that the user is the active player, checks that the user is
-            alive, checks that the target of the user is not the user and is
-            alive and checks that the user has less than 10 coins.
+            alive, checks that the target of the user is not the user, has more
+            than 0 coins and is alive and checks that the user has less than 10
+            coins.
 """
 
 """
 Exchange - Action
-    Fields:
-        action_user: Player
+    Attributes:
         action_name: Exchange
         action_description: Exchange cards with the Court deck. First take two
                             random cards from the Court deck. Choose which, if
@@ -102,6 +117,9 @@ Exchange - Action
         blockable: False
         challengeable: True
         has_target: False
+
+    Fields:
+        action_user: Player
         action_succeeds: True
 
     Methods:
@@ -109,6 +127,8 @@ Exchange - Action
             Two cards are drawn from the deck, the active player then must
             resolve which card/card(s) they want to keep (get_player_exchange).
             The remaining cards are returned to the deck.
+
+        @staticmethod
         is_legal(gamestate, user): bool
             Checks that the user is the active player, checks that the user is
             alive, checks that the user has less than 10 coins.
@@ -116,8 +136,7 @@ Exchange - Action
 
 """
 Block Assassination - Action
-    Fields:
-        action_user: Player
+    Attributes:
         action_name: Block Assassination
         action_description: The player who is being assassinated may claim the
                             Contessa and counteract to block the assassination.
@@ -129,11 +148,16 @@ Block Assassination - Action
         blockable: True
         challengeable: True
         has_target: False
+
+    Fields:
+        action_user: Player
         action_succeeds: True
 
     Methods:
         resolve(gamestate):
             Target player must choose an influence to lose.
+
+        @staticmethod
         is_legal(gamestate, user): bool
             Checks that the user is not the active player, checks that the last
             action in the action stack is an assasination action with the user
@@ -142,8 +166,7 @@ Block Assassination - Action
 
 """
 Block Foreign Aid - Action
-    Fields:
-        action_user: Player
+    Attributes:
         action_name: Block Foreign Aid
         action_description: Any player claiming the Duke may counteract and
                             block a player attempting to collect foreign aid.
@@ -153,12 +176,17 @@ Block Foreign Aid - Action
         blockable: False
         challengeable: True
         has_target: False
+    
+    Fields:
+        action_user: Player
         action_succeeds: True
 
     Methods:
         resolve(gamestate):
             If the top action in the action stack is a foreign aid action, its
             action_succeeds field is set to False.
+
+        @staticmethod
         is_legal(gamestate, user): bool
             Checks that the user is not the active player, checks that the last
             action in the action stack is a foreign aid action, checks that the
@@ -167,8 +195,7 @@ Block Foreign Aid - Action
 
 """
 Block Stealing - Action
-    Fields:
-        action_user: Player
+    Attributes:
         action_name: Block Stealing
         action_description: The player who is being stolen from may claim either
                             the Ambassador or the Captain and counteract to
@@ -180,12 +207,17 @@ Block Stealing - Action
         blockable: False
         challengeable: True
         has_target: False
+
+    Fields:
+        action_user: Player
         action_succeeds: True
 
     Methods:
         resolve(gamestate):
             If the top action in the action stack is a steal action, its 
             action_succeeds field is set to False.
+
+        @staticmethod
         is_legal(gamestate, user): bool
             Checks that the user is not the active player, checks that the last
             action in the action stack is a steal action, checks that the user
@@ -194,8 +226,7 @@ Block Stealing - Action
 
 """
 Income - Action
-    Fields:
-        action_user: Player
+    Attributes:
         action_name: Income
         action_description: Take 1 coin from the treasury.
         action_cost: 0
@@ -204,11 +235,16 @@ Income - Action
         blockable: False
         challengeable: False
         has_target: False
+
+    Fields:
+        action_user: Player
         action_succeeds: True
 
     Methods:
         resolve(gamestate):
             Active player gains 1 coin.
+        
+        @staticmethod
         is_legal(gamestate, user): bool
             Checks that the user is the active player, checks that the user is
             alive and checks that the user currently has less than 10 coins.
@@ -216,8 +252,7 @@ Income - Action
 
 """
 Foreign Aid - Action
-    Fields:
-        action_user: Player
+    Attributes:
         action_name: Foreign Aid
         action_description: Take 2 coins from the treasury (can be blocked by
                             the Duke).
@@ -227,11 +262,16 @@ Foreign Aid - Action
         blockable: True
         challengeable: False
         has_target: False
+
+    Fields:
+        action_user: Player
         action_succeeds: True
 
     Methods:
         resolve(gamestate):
             Active player gains 2 coins.
+
+        @staticmethod
         is_legal(gamestate, user): bool
             Checks that the user is the active player, checks that the user is
             alive and checks that the user currently has less than 10 coins.
@@ -239,8 +279,7 @@ Foreign Aid - Action
 
 """
 Coup - Action
-    Fields:
-        action_user: Player
+    Attributes:
         action_name: Coup
         action_description: Pay 7 coins to the Treasury and launch a Coup
                             against another player. That player immediately
@@ -253,20 +292,24 @@ Coup - Action
         blockable: False
         challengeable: False
         has_target: True
+
+    Fields:
+        action_user: Player
         action_succeeds: True
 
     Methods:
         resolve(gamestate):
             Target player must choose an influence to lose.
-        is_legal(gamestate, user): bool
+
+        @staticmethod
+        is_legal(gamestate, user, target): bool
             Checks that the user is the active player, checks that the user is
             alive and checks that the user currently has 7 or more coins.
 """
 
 """
 Challenge - Action
-    Fields:
-        action_user: Player
+    Attributes:
         action_name: Challenge
         action_description: If a player is challenged they must prove they had
                             the required influence by showing the relevant
@@ -284,6 +327,9 @@ Challenge - Action
         blockable: False
         challengeable: False
         has_target: False
+
+    Fields:
+        action_user: Player
         action_succeeds: True
 
     Methods:
@@ -296,6 +342,8 @@ Challenge - Action
             If the challenged player does not satisfy the action requirement,
             they must lose an influence and the action_succeeds field of the
             top action in the action stack is set to False.
+
+        @staticmethod
         is_legal(gamestate, user): bool
             Checks that the user is not the active player, checks that the user
             is alive and checks that the last action in the action stack is
