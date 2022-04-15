@@ -11,6 +11,8 @@ Action Stack Class
             push an action to the stack
         - pop:
             pop an action from the stack
+        - peek:
+            returns the top action on the stack without removing it from the stack
         - is_empty:
             check if the stack is empty
         - resolve:
