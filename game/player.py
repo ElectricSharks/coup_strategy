@@ -3,25 +3,34 @@ Player Class
 
     Fields:
         name: string
-        coins: int
+        coins (initially 3): int
         hidden_influences: list of influences
         revealed_influences: list of influences
         player_strategy: Strategy
-            Which should implement the following methods:
-                action_strategy(gamestate):
-                counter_action_strategy(gamestate):
-                influence_loss_strategy(gamestate):
-                exchange_strategy(gamestate):
 
     Methods:
         is_alive(): bool
+            Returns true if the player has at least one hidden influence.
         reset_player():
         get_player_action(gamestate):
         get_player_counter_action(gamestate):
+            Invokes the counter action strategy function with 'self' as the
+            countering player.
         lose_influence(gamestate):
-        lose_both_influences():
+            Invoke the influence loss strategy function, to select which
+            influence to lose, then remove the first instance of that influence
+            from the player's hidden_influences and add it to the player's
+            revealed_influences.
         get_player_exchange(gamestate, cards):
+            Append the player's hidden influences to the list of cards, then
+            invoke the player exchange strategy function, this will return a
+            list of cards to keep and a list of cards to return to the deck.
+            Then set the player's hidden_influences to the list of cards to keep
+            and return the list of cards to return to the deck. 
         satisfy_action_requirement(action): bool
+            If the action isn't challengeable return true. If the action is 
+            challengeable, return true if an instance of the action's action
+            requirement is in the player's hidden influences.
         get_num_influences(): int
             Returns the number of hidden influences the player has.
         get_num_coins(): int

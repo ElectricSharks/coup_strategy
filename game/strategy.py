@@ -22,6 +22,7 @@ Honest Strategy Class
         counter_action_strategy:
             Inputs:
                 - gamestate: GameState
+                - countering_player: Player
             Outputs:
                 - action: Action or None
             
@@ -45,11 +46,13 @@ Honest Strategy Class
                 - gamestate: GameState
                 - influence_cards: list of cards
             Outputs:
+                - cards_to_keep: list of cards to keep
                 - cards_to_return: list of cards to return to the deck
 
             Description:
-                Return two cards randomly chosen out of the active player's
-                hidden influences and the influence_cards.
+                Selects two cards at random from the list of influence cards,
+                returns these two cards in a new list of cards_to_return, and
+                returns the remaining influence cards as the cards to keep.
 
         _get_coup_target:
             Inputs:
@@ -82,6 +85,7 @@ Manual Input Strategy Class
         counter_action_strategy:
             Inputs:
                 - gamestate: GameState
+                - countering_player: Player
             Outputs:
                 - action: Action or None
             
@@ -106,9 +110,11 @@ Manual Input Strategy Class
                 - gamestate: GameState
                 - influence_cards: list of cards
             Outputs:
+                - cards_to_keep: list of cards to keep
                 - cards_to_return: list of cards to return to the deck
 
             Description:
-                Print the game state, then print the two influence cards and ask
-                the suer to choose two of the cards. Return the chosen cards.
+                Print the game state, then print the influence cards and ask the
+                user to choose two of them. Return the chosen cards as the cards to return
+                and the unchosen card/(s) as cards to keep.
 """
