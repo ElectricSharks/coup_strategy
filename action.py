@@ -127,3 +127,23 @@ Coup
     blockable: False
     challengeable: False
 """
+
+"""
+Challenge
+    action_name: Challenge
+    action_description: If a player is challenged they must prove they had the
+                        required influence by showing the relevant character is
+                        one of their face-down cards. If they can't, or do not
+                        wish to, prove it, they lose the challenge. If they can,
+                        the challenger loses.
+                        Whoever loses the challenge immediately loses an influence.
+                        If a player wins a challenge by showing the relevant
+                        character card, they first return that card to the Court
+                        deck, re-shuffle the Court deck and take a random
+                        replacement card.
+    action_cost: 0
+    action_type: challenge
+    action_requirement: None
+    blockable: False
+    challengeable: False
+"""
