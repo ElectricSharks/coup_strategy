@@ -27,7 +27,7 @@ Player Class
             list of cards to keep and a list of cards to return to the deck.
             Then set the player's hidden_influences to the list of cards to keep
             and return the list of cards to return to the deck. 
-        satisfy_action_requirement(action): bool
+        satisfies_action_requirement(action): bool
             If the action isn't challengeable return true. If the action is 
             challengeable, return true if an instance of the action's action
             requirement is in the player's hidden influences.
@@ -38,4 +38,9 @@ Player Class
             Format and print the players name, their coins and their revealed
             influences. If the hidden tag is set to true, additionally print
             their hidden influences.
+        replace_influence(gamestate, influence):
+            Draw a card from the deck.
+            Then remove the first instance of the influence from the player's
+            hidden_influences and return it to the deck.
+            Then add the new influence to the player's hidden_influences.
 """

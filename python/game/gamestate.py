@@ -22,4 +22,6 @@ GameState Class
         get_legal_actions():
             Iterate through all of the actions, checking whether they are legal
             for the active player.
+        draw_card(): Influence
+        return_card_to_deck():
 """
