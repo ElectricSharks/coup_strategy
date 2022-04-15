@@ -4,6 +4,7 @@ Action Class
     Fields:
         action_user: Player
         action_name: None
+        target (optional): Player or None
 
     Methods:
         print_action():
@@ -67,7 +68,7 @@ Assassinate - Action
         is_legal(gamestate, user, target): bool
             Checks that the user is the active player, checks that the user is
             alive, checks that the target of the user is not the user and is
-            alive and checks that the user has less than 10 coins, checks that
+            alive, checks that the user has less than 10 coins and checks that
             the user has 3 or more coins.
 """
 
