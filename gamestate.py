@@ -6,7 +6,7 @@ GameState Class
     Fields:
         - players: list of players
         - action_stack: action stack
-        - turn: int
+        - player_turn_order: list of players
         - deck: list of cards
     
     Methods:
