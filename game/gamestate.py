@@ -87,9 +87,9 @@ class GameState:
             ForeignAid, Challenge
         ]
         opposing_players = [p for p in self.players if p != player]
-        legal_actions = [(a, None) for a in actions_without_targets if a.is_legal(self.gamestate, player)]
+        legal_actions = [action(player) for action in actions_without_targets if action.is_legal(self.gamestate, player)]
         for target in opposing_players:
-            legal_actions.extend([(a, target) for a in actions_with_targets if a.is_legal(self.gamestate, player, target)])
+            legal_actions.extend([action(player, target) for action in actions_with_targets if action.is_legal(self.gamestate, player, target)])
         
         return legal_actions
     

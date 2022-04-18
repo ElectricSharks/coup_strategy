@@ -190,3 +190,40 @@ Manual Input Strategy Class
                 user to choose two of them. Return the chosen cards as the cards to return
                 and the unchosen card/(s) as cards to keep.
 """
+class ManualInputStrategy:
+
+    def action_strategy(self, gamestate):
+        active_player = gamestate.get_active_player()
+        gamestate.print_game_state(active_player)
+        legal_actions = [action for action in gamestate.get_legal_actions(active_player)]
+        # Get the user's choice
+        return self._get_user_choice(legal_actions)
+    
+    def counteraction_strategy(self, gamestate, countering_player):
+        gamestate.print_game_state(countering_player)
+        legal_actions = [action for action in gamestate.get_legal_actions(countering_player)]
+        legal_actions.append(None)
+        # Get the user's choice
+        return self._get_user_choice(legal_actions, message="Would you like to make a counteraction:")
+
+    def influence_loss_strategy(self, gamestate, target_player):
+        gamestate.print_game_state(target_player)
+        if len(target_player.hidden_influences) > 1:
+            # Get the user's choice
+            return self._get_user_choice(target_player.hidden_influences)
+        else:
+            return target_player.hidden_influences[0]
+
+    def player_exchange_strategy(self, gamestate):
+        pass
+
+    def _get_user_choice(self, options, message="Choose an option:"):
+        print(message)
+        for i, option in enumerate(options):
+            print(f"{i}: {option}")
+        choice = None
+        while choice not in {i for i in range(len(options))}:
+            choice = int(input("Enter your choice: "))
+        
+        # Return the chosen option
+        return options[choice]

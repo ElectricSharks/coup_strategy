@@ -25,6 +25,15 @@ class Action:
             print_string += " on " + self.target.name
         print(print_string)
 
+    def describe(self):
+        """
+        Returns a string describing the action.
+        """
+        description = "Attempt to use " + self.name
+        if self.target is not None:
+            description += " on " + self.target.name
+        return description
+
 
 
 """
