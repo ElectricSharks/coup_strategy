@@ -1,4 +1,5 @@
-from python.game.influence import Duke, Assassin, Contessa, Captain, Ambassador
+from coup.influence import Duke, Assassin, Contessa, Captain, Ambassador
+
 """
 Action Class
     Fields:
@@ -12,6 +13,8 @@ Action Class
             Print the name of the action user, the action they are attempting to
             perform and, if applicable, the target of the action.
 """
+
+
 class Action:
     def __init__(self, user, name, target=None):
         self.user = user
@@ -25,15 +28,14 @@ class Action:
             print_string += " on " + self.target.name
         print(print_string)
 
-    def describe(self):
+    def __str__(self):
         """
         Returns a string describing the action.
         """
-        description = "Attempt to use " + self.name
+        description = self.user.name + " is attempting to use " + self.name
         if self.target is not None:
             description += " on " + self.target.name
         return description
-
 
 
 """
@@ -63,6 +65,8 @@ Tax - Action
             Check that the user is the active player, checks that the user is
             alive and checks that the user currently has less than 10 coins.
 """
+
+
 class Tax(Action):
 
     name = "Tax"
@@ -76,15 +80,17 @@ class Tax(Action):
 
     def __init__(self, user):
         super().__init__(user, self.name)
-    
+
     def resolve(self, gamestate):
         self.user.coins += 3
 
     @staticmethod
     def is_legal(gamestate, user):
-        return (user == gamestate.get_active_player() and
-                user.is_alive() and
-                user.coins < 10)
+        return (
+            user == gamestate.get_active_player()
+            and user.is_alive()
+            and user.coins < 10
+        )
 
 
 """
@@ -117,8 +123,10 @@ Assassinate - Action
             alive, checks that the user has less than 10 coins and checks that
             the user has 3 or more coins.
 """
+
+
 class Assassinate(Action):
-    
+
     name = "Assassinate"
     description = "Pay 3 coins to the Treasury and launch an assassination attempt against another player. If successful that player immediately loses an influence (can be blocked by the Contessa)."
     cost = 3
@@ -136,12 +144,15 @@ class Assassinate(Action):
 
     @staticmethod
     def is_legal(gamestate, user, target):
-        return (user == gamestate.get_active_player() and
-                user.is_alive() and
-                target != user and
-                target.alive and
-                user.coins >= 3 and
-                user.coins < 10)
+        return (
+            user == gamestate.get_active_player()
+            and user.is_alive()
+            and target != user
+            and target.is_alive()
+            and user.coins >= 3
+            and user.coins < 10
+        )
+
 
 """
 Steal - Action
@@ -174,10 +185,14 @@ Steal - Action
             than 0 coins and is alive and checks that the user has less than 10
             coins.
 """
+
+
 class Steal(Action):
-        
+
     name = "Steal"
-    description = "Take 2 coins from another player, if they have one, take 1 coin from them."
+    description = (
+        "Take 2 coins from another player, if they have one, take 1 coin from them."
+    )
     cost = 0
     type = "character"
     requirement = Captain
@@ -198,12 +213,14 @@ class Steal(Action):
 
     @staticmethod
     def is_legal(gamestate, user, target):
-        return (user == gamestate.get_active_player() and
-                user.is_alive() and
-                target != user and
-                target.alive and
-                target.coins > 0 and
-                user.coins < 10)
+        return (
+            user == gamestate.get_active_player()
+            and user.is_alive()
+            and target != user
+            and target.is_alive()
+            and target.coins > 0
+            and user.coins < 10
+        )
 
 
 """
@@ -236,8 +253,10 @@ Exchange - Action
             Checks that the user is the active player, checks that the user is
             alive, checks that the user has less than 10 coins.
 """
+
+
 class Exchange(Action):
-        
+
     name = "Exchange"
     description = "Exchange cards with the Court deck. First take two random cards from the Court deck. Choose which, if any to exchange with your face-down cards. Then return two cards to the Court deck."
     cost = 0
@@ -258,9 +277,12 @@ class Exchange(Action):
 
     @staticmethod
     def is_legal(gamestate, user):
-        return (user == gamestate.get_active_player() and
-                user.is_alive() and
-                user.coins < 10)
+        return (
+            user == gamestate.get_active_player()
+            and user.is_alive()
+            and user.coins < 10
+        )
+
 
 """
 Block Assassination - Action
@@ -292,8 +314,10 @@ Block Assassination - Action
             action in the action stack is an assasination action with the user
             as the target, checks that the user is alive.
 """
+
+
 class BlockAssassination(Action):
-        
+
     name = "Block Assassination"
     description = "The player who is being assassinated may claim the Contessa and counteract to block the assassination. The assasination attempt fails but the fee paid by the player for the assassin remains spent."
     cost = 0
@@ -312,13 +336,15 @@ class BlockAssassination(Action):
             blocked_action.succeeds = False
             gamestate.action_stack.push(blocked_action)
 
-
     @staticmethod
     def is_legal(gamestate, user):
-        return (user != gamestate.get_active_player() and
-                user.is_alive() and
-                isinstance(gamestate.action_stack.peek(), Assassinate) and
-                gamestate.action_stack.peek().target == user)
+        return (
+            user != gamestate.get_active_player()
+            and user.is_alive()
+            and isinstance(gamestate.action_stack.peek(), Assassinate)
+            and gamestate.action_stack.peek().target == user
+        )
+
 
 """
 Block Foreign Aid - Action
@@ -348,7 +374,9 @@ Block Foreign Aid - Action
             action in the action stack is a foreign aid action, checks that the
             user is alive.
 """
-class BlockForeignAid(Action):        
+
+
+class BlockForeignAid(Action):
     name = "Block Foreign Aid"
     description = "Any player claiming the Duke may counteract and block a player attempting to collect foreign aid."
     cost = 0
@@ -369,9 +397,12 @@ class BlockForeignAid(Action):
 
     @staticmethod
     def is_legal(gamestate, user):
-        return (user != gamestate.get_active_player() and
-                user.is_alive() and
-                isinstance(gamestate.action_stack.peek(), ForeignAid))
+        return (
+            user != gamestate.get_active_player()
+            and user.is_alive()
+            and isinstance(gamestate.action_stack.peek(), ForeignAid)
+        )
+
 
 """
 Block Stealing Ambassador - Action
@@ -402,6 +433,8 @@ Block Stealing Ambassador - Action
             action in the action stack is a steal action, checks that the user
             is alive.
 """
+
+
 class BlockStealingAmbassador(Action):
     name = "Block Stealing"
     description = "The player who is being stolen from may claim the Ambassador and counteract to block the steal. The player trying to steal receives no coins that turn."
@@ -423,9 +456,12 @@ class BlockStealingAmbassador(Action):
 
     @staticmethod
     def is_legal(gamestate, user):
-        return (user != gamestate.get_active_player() and
-                user.is_alive() and
-                isinstance(gamestate.action_stack.peek(), Steal))
+        return (
+            user != gamestate.get_active_player()
+            and user.is_alive()
+            and isinstance(gamestate.action_stack.peek(), Steal)
+        )
+
 
 """
 Block Stealing Captain - Action
@@ -456,6 +492,8 @@ Block Stealing Captain - Action
             action in the action stack is a steal action, checks that the user
             is alive.
 """
+
+
 class BlockStealingCaptain(Action):
     name = "Block Stealing"
     description = "The player who is being stolen from may claim the Captain and counteract to block the steal. The player trying to steal receives no coins that turn."
@@ -477,9 +515,12 @@ class BlockStealingCaptain(Action):
 
     @staticmethod
     def is_legal(gamestate, user):
-        return (user != gamestate.get_active_player() and
-                user.is_alive() and
-                isinstance(gamestate.action_stack.peek(), Steal))
+        return (
+            user != gamestate.get_active_player()
+            and user.is_alive()
+            and isinstance(gamestate.action_stack.peek(), Steal)
+        )
+
 
 """
 Income - Action
@@ -506,6 +547,8 @@ Income - Action
             Checks that the user is the active player, checks that the user is
             alive and checks that the user currently has less than 10 coins.
 """
+
+
 class Income(Action):
     name = "Income"
     description = "Take 1 coin from the treasury."
@@ -524,9 +567,12 @@ class Income(Action):
 
     @staticmethod
     def is_legal(gamestate, user):
-        return (user == gamestate.get_active_player() and
-                user.is_alive() and
-                user.coins < 10)
+        return (
+            user == gamestate.get_active_player()
+            and user.is_alive()
+            and user.coins < 10
+        )
+
 
 """
 Foreign Aid - Action
@@ -554,6 +600,8 @@ Foreign Aid - Action
             Checks that the user is the active player, checks that the user is
             alive and checks that the user currently has less than 10 coins.
 """
+
+
 class ForeignAid(Action):
     name = "Foreign Aid"
     description = "Take 2 coins from the treasury (can be blocked by the Duke)."
@@ -572,9 +620,12 @@ class ForeignAid(Action):
 
     @staticmethod
     def is_legal(gamestate, user):
-        return (user == gamestate.get_active_player() and
-                user.is_alive() and
-                user.coins < 10)
+        return (
+            user == gamestate.get_active_player()
+            and user.is_alive()
+            and user.coins < 10
+        )
+
 
 """
 Coup - Action
@@ -605,6 +656,8 @@ Coup - Action
             Checks that the user is the active player, checks that the user is
             alive and checks that the user currently has 7 or more coins.
 """
+
+
 class Coup(Action):
     name = "Coup"
     description = "Pay 7 coins to the Treasury and launch a Coup against another player. That player immediately loses an influence. A Coup is always successful. If you start your turn with 10 (or more) coins you are required to launch a Coup."
@@ -623,9 +676,12 @@ class Coup(Action):
 
     @staticmethod
     def is_legal(gamestate, user, target):
-        return (user == gamestate.get_active_player() and
-                user.is_alive() and
-                user.coins >= 7)
+        return (
+            user == gamestate.get_active_player()
+            and user.is_alive()
+            and user.coins >= 7
+        )
+
 
 """
 Challenge - Action
@@ -670,6 +726,8 @@ Challenge - Action
             the user is not the user for the top action in the action
             stack.
 """
+
+
 class Challenge(Action):
     name = "Challenge"
     description = "If a player is challenged they must prove they had the required influence by showing the relevant character is one of their face-down cards. If they can't, or do not wish to, prove it, they lose the challenge. If they can, the challenger loses. Whoever loses the challenge immediately loses an influence. If a player wins a challenge by showing the relevant character card, they first return that card to the Court deck, re-shuffle the Court deck and take a random replacement card."
@@ -688,15 +746,18 @@ class Challenge(Action):
         challenged_player = challenged_action.user
         if challenged_player.satisfies_requirement(challenged_action):
             self.user.lose_influence(gamestate)
-            challenged_player.replace_influence(gamestate, challenged_action.requirement)
+            challenged_player.replace_influence(
+                gamestate, challenged_action.requirement
+            )
         else:
             challenged_action.succeeds = False
             challenged_player.lose_influence(gamestate)
 
     @staticmethod
     def is_legal(gamestate, user):
-        return (not gamestate.action_stack.is_empty() and
-                user.is_alive() and
-                gamestate.action_stack.peek().challengeable and
-                user != gamestate.action_stack.peek().user)
-
+        return (
+            not gamestate.action_stack.is_empty()
+            and user.is_alive()
+            and gamestate.action_stack.peek().challengeable
+            and user != gamestate.action_stack.peek().user
+        )

@@ -23,32 +23,34 @@ Action Stack Class
             iterate through the actions in the action stack, invoking their
             print_state methods.
 """
+
+
 class ActionStack:
     def __init__(self):
         self.actions = []
-    
+
     def push(self, action):
         self.actions.append(action)
-    
+
     def pop(self):
         if not self.is_empty():
             return self.actions.pop()
         return None
-    
+
     def peek(self):
         if not self.is_empty():
             return self.actions[-1]
         return None
-    
+
     def is_empty(self):
         return len(self.actions) == 0
-    
+
     def resolve(self, gamestate):
         while not self.is_empty():
             action = self.pop()
             if action.succeeds:
                 action.resolve(gamestate)
-    
+
     def print_state(self):
         for action in self.actions:
-            action.print_state()
+            print(action)

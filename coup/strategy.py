@@ -1,5 +1,5 @@
-from python.game.influence import *
-from python.game.action import *
+from coup.influence import *
+from coup.action import *
 from random import choice, choices
 
 """
@@ -70,6 +70,8 @@ Honest Strategy Class
                 there is still a tie a random choice between the tied players is
                 made.
 """
+
+
 class HonestStrategy:
     def action_strategy(self, gamestate):
         active_player = gamestate.get_active_player()
@@ -124,10 +126,20 @@ class HonestStrategy:
         made.
         """
         active_player = gamestate.get_active_player()
-        max_influences = max(player.get_num_influences() for player in gamestate.players if player != active_player)
-        max_influence_players = [player for player in gamestate.players if player != active_player and player.get_num_influences() == max_influences]
+        max_influences = max(
+            player.get_num_influences()
+            for player in gamestate.players
+            if player != active_player
+        )
+        max_influence_players = [
+            player
+            for player in gamestate.players
+            if player != active_player and player.get_num_influences() == max_influences
+        ]
         max_coins = max(player.coins for player in max_influence_players)
-        max_coin_players = [player for player in max_influence_players if player.coins == max_coins]
+        max_coin_players = [
+            player for player in max_influence_players if player.coins == max_coins
+        ]
         return choice(max_coin_players)
 
     def _has_single_duke(self, player):
@@ -190,32 +202,55 @@ Manual Input Strategy Class
                 user to choose two of them. Return the chosen cards as the cards to return
                 and the unchosen card/(s) as cards to keep.
 """
-class ManualInputStrategy:
 
+
+class ManualInputStrategy:
     def action_strategy(self, gamestate):
         active_player = gamestate.get_active_player()
         gamestate.print_game_state(active_player)
-        legal_actions = [action for action in gamestate.get_legal_actions(active_player)]
+        legal_actions = [
+            action for action in gamestate.get_legal_actions(active_player)
+        ]
         # Get the user's choice
-        return self._get_user_choice(legal_actions)
-    
+        return self._get_user_choice(legal_actions, message="Choose an action: ")
+
     def counteraction_strategy(self, gamestate, countering_player):
         gamestate.print_game_state(countering_player)
-        legal_actions = [action for action in gamestate.get_legal_actions(countering_player)]
+        legal_actions = [
+            action for action in gamestate.get_legal_actions(countering_player)
+        ]
         legal_actions.append(None)
         # Get the user's choice
-        return self._get_user_choice(legal_actions, message="Would you like to make a counteraction:")
+        return self._get_user_choice(
+            legal_actions, message="Would you like to make a counteraction:"
+        )
 
     def influence_loss_strategy(self, gamestate, target_player):
         gamestate.print_game_state(target_player)
         if len(target_player.hidden_influences) > 1:
             # Get the user's choice
-            return self._get_user_choice(target_player.hidden_influences)
+            return self._get_user_choice(
+                target_player.hidden_influences, message="Choose an influence to lose: "
+            )
         else:
             return target_player.hidden_influences[0]
 
     def player_exchange_strategy(self, gamestate):
-        pass
+        gamestate.print_game_state()
+        active_player = gamestate.get_active_player()
+        # Get the user's choice
+        print("Choose two of your influence cards to return to the deck.")
+        first_card = self._get_user_choice(
+            active_player.hidden_influences, message="First influnce card to return."
+        )
+        second_card = self._get_user_choice(
+            active_player.hidden_influences, message="Second influence card to return."
+        )
+        return [first_card, second_card], [
+            card
+            for card in active_player.hidden_influences
+            if card not in [first_card, second_card]
+        ]
 
     def _get_user_choice(self, options, message="Choose an option:"):
         print(message)
@@ -223,7 +258,7 @@ class ManualInputStrategy:
             print(f"{i}: {option}")
         choice = None
         while choice not in {i for i in range(len(options))}:
-            choice = int(input("Enter your choice: "))
-        
+            choice = int(input("Enter the index of your choice: "))
+
         # Return the chosen option
         return options[choice]

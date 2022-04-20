@@ -46,6 +46,8 @@ Player Class
             hidden_influences and return it to the deck.
             Then add the new influence to the player's hidden_influences.
 """
+
+
 class Player:
     def __init__(self, name, strategy):
         self.name = name
@@ -69,7 +71,9 @@ class Player:
         return self.player_strategy.counteraction_strategy(gamestate, self)
 
     def lose_influence(self, gamestate):
-        influence_to_lose = self.player_strategy.influence_loss_strategy(gamestate, self)
+        influence_to_lose = self.player_strategy.influence_loss_strategy(
+            gamestate, self
+        )
         lose_ind = self.hidden_influences.index(influence_to_lose)
         self.revealed_influences.append(self.hidden_influences.pop(lose_ind))
 
@@ -80,14 +84,19 @@ class Player:
 
     def get_exchange(self, gamestate, cards):
         self.hidden_influences.append(cards)
-        cards_to_keep, cards_to_return = self.player_strategy.exchange_strategy(gamestate)
+        cards_to_keep, cards_to_return = self.player_strategy.exchange_strategy(
+            gamestate
+        )
         self.hidden_influences = cards_to_keep
         return cards_to_return
 
     def satisfies_action_requirement(self, action):
         if not action.challengeable:
             return True
-        return any(isinstance(influence, action.requirement) for influence in self.hidden_influences)
+        return any(
+            isinstance(influence, action.requirement)
+            for influence in self.hidden_influences
+        )
 
     def get_num_influences(self):
         return len(self.hidden_influences)
@@ -102,8 +111,14 @@ class Player:
         print(self.name + ":")
         print("Coins: " + str(self.coins))
         if hidden:
-            print("Hidden Influences: " + str(self.hidden_influences))
-        print("Revealed Influences: " + str(self.revealed_influences))
+            print(
+                "Hidden Influences: "
+                + str([str(influence) for influence in self.hidden_influences])
+            )
+        print(
+            "Revealed Influences: "
+            + str([str(influence) for influence in self.revealed_influences])
+        )
 
     def replace_influence(self, gamestate, influence):
         card = gamestate.deck.draw_card()

@@ -1,4 +1,5 @@
-from python.game.gamestate import GameState
+from coup.gamestate import GameState
+
 """
 Game Class
     
@@ -29,21 +30,23 @@ Game Class
             counteraction and the player who played it otherwise return None,
             None.
 """
+
+
 class Game:
     def __init__(self, players):
         self.gamestate = GameState(players)
         self.reset()
-    
+
     def reset(self):
         self.gamestate.reset()
-    
+
     def play(self):
         while not self.gamestate.is_game_over():
             self.handle_turn()
             self.gamestate.next_turn()
         winner = self.gamestate.get_winner()
         print(f"The winner is {winner.name}!")
-    
+
     def handle_turn(self):
         """
         Get the active player's action, if the action has a cost this is
@@ -76,7 +79,7 @@ class Game:
             if counteraction:
                 self.gamestate.play(counteraction)
         self.gamestate.resolve_action_stack()
-    
+
     def _get_counteraction(self, acting_player):
         """
         Iterate through the players not including the acting_player, and

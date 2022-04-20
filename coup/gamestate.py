@@ -1,6 +1,7 @@
-from python.game.action_stack import ActionStack
-from python.game.deck import Deck
-from python.game.action import *
+from coup.action_stack import ActionStack
+from coup.deck import Deck
+from coup.action import *
+
 """
 GameState Class
 
@@ -44,6 +45,8 @@ GameState Class
         play(action):
             Add the action to the action_stack.
 """
+
+
 class GameState:
     def __init__(self, players):
         self.players = players
@@ -51,57 +54,75 @@ class GameState:
         self.action_stack = ActionStack()
         self.deck = Deck()
         self.reset()
-    
+
     def is_game_over(self):
         return len(self.player_turn_tracker) <= 1
-    
+
     def reset(self):
         self.deck.reset()
         self.player_turn_tracker = self.players[:]
         for player in self.players:
             player.reset_player()
             player.hidden_influences = self.deck.draw_cards(2)
-    
+
     def get_active_player(self):
         if not self.is_game_over():
             return self.player_turn_tracker[0]
         return None
-    
+
     def resolve_action_stack(self):
         self.action_stack.resolve(self)
-    
+
     def print_game_state(self, current_player):
         for player in self.players:
             player.print_player_state(hidden=(player == current_player))
         self.action_stack.print_state()
-    
+
     def next_turn(self):
         self.player_turn_tracker.append(self.player_turn_tracker.pop(0))
-        self.player_turn_tracker = [player for player in self.player_turn_tracker if player.is_alive()]
-    
+        self.player_turn_tracker = [
+            player for player in self.player_turn_tracker if player.is_alive()
+        ]
+
     def get_legal_actions(self, player):
         actions_with_targets = [Assassinate, Coup, Steal]
         actions_without_targets = [
-            Tax, Exchange, BlockAssassination, BlockForeignAid,
-            BlockStealingAmbassador, BlockStealingCaptain, Income,
-            ForeignAid, Challenge
+            Tax,
+            Exchange,
+            BlockAssassination,
+            BlockForeignAid,
+            BlockStealingAmbassador,
+            BlockStealingCaptain,
+            Income,
+            ForeignAid,
+            Challenge,
         ]
         opposing_players = [p for p in self.players if p != player]
-        legal_actions = [action(player) for action in actions_without_targets if action.is_legal(self.gamestate, player)]
+        legal_actions = [
+            action(player)
+            for action in actions_without_targets
+            if action.is_legal(self, player)
+        ]
         for target in opposing_players:
-            legal_actions.extend([action(player, target) for action in actions_with_targets if action.is_legal(self.gamestate, player, target)])
-        
+            legal_actions.extend(
+                [
+                    action(player, target)
+                    for action in actions_with_targets
+                    if action.is_legal(self, player, target)
+                ]
+            )
+
         return legal_actions
-    
+
     def draw_card(self):
         return self.deck.draw_card()
-    
+
     def return_card_to_deck(self, card):
         self.deck.return_card(card)
 
     def play(self, action):
         self.action_stack.push(action)
-    
+
     def get_winner(self):
         if len(self.player_turn_tracker) == 1:
             return self.player_turn_tracker[0]
